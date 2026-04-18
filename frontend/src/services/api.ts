@@ -1,8 +1,21 @@
-import axios from 'axios';
+import axios from "axios";
 
-// Creating an Axios instance targeting the actual backend
+const rawApiUrl = import.meta.env.VITE_API_URL?.trim();
+
+function resolveApiBaseUrl(): string {
+  if (!rawApiUrl) {
+    return "http://localhost:8080/api";
+  }
+
+  const withoutTrailingSlash = rawApiUrl.replace(/\/+$/, "");
+  return withoutTrailingSlash.endsWith("/api")
+    ? withoutTrailingSlash
+    : `${withoutTrailingSlash}/api`;
+}
+
+// Use VITE_API_URL in deployed environments and localhost for local fallback.
 export const apiClient = axios.create({
-  baseURL: 'http://localhost:8080/api', // Spring Boot default backend URL
+  baseURL: resolveApiBaseUrl(),
   timeout: 10000,
 });
 
@@ -76,10 +89,10 @@ export interface DashboardAnalytics {
 }
 
 const CLASS_LEVEL_ALIASES: Record<string, string[]> = {
-  Basic: ['Class 1', 'Class 2', 'Class 1-2'],
-  Intermediate: ['Class 3', 'Class 4', 'Class 3-4'],
-  Advanced: ['Class 5', 'Class 6'],
-  Beginner: ['Basic', 'Class 1', 'Class 2', 'Class 1-2'],
+  Basic: ["Class 1", "Class 2", "Class 1-2"],
+  Intermediate: ["Class 3", "Class 4", "Class 3-4"],
+  Advanced: ["Class 5", "Class 6"],
+  Beginner: ["Basic", "Class 1", "Class 2", "Class 1-2"],
 };
 
 function toQuestionViewModel(question: BackendQuestion): Question {
@@ -88,7 +101,7 @@ function toQuestionViewModel(question: BackendQuestion): Question {
     text: question.questionText,
     options: question.options,
     correctOptionIndex: question.options.findIndex(
-      (option) => option === question.correctAnswer
+      (option) => option === question.correctAnswer,
     ),
     subject: question.subject,
     classLevel: question.classLevel,
@@ -96,7 +109,7 @@ function toQuestionViewModel(question: BackendQuestion): Question {
 }
 
 function buildClassLevelCandidates(classLevel: string): string[] {
-  const normalized = classLevel?.trim() || 'Basic';
+  const normalized = classLevel?.trim() || "Basic";
   const aliasCandidates = CLASS_LEVEL_ALIASES[normalized] || [];
   return Array.from(new Set([normalized, ...aliasCandidates]));
 }
@@ -105,31 +118,31 @@ export const api = {
   // Setup Authentication headers
   setToken: (token: string | null) => {
     if (token) {
-      apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     } else {
-      delete apiClient.defaults.headers.common['Authorization'];
+      delete apiClient.defaults.headers.common["Authorization"];
     }
   },
 
   // Auth Endpoints
   login: async (credentials: any) => {
-    const response = await apiClient.post('/users/login', credentials);
+    const response = await apiClient.post("/users/login", credentials);
     return response.data; // AuthResponse -> token, userId, email, name
   },
 
   register: async (details: any) => {
-    const response = await apiClient.post('/users/register', details);
+    const response = await apiClient.post("/users/register", details);
     return response.data; // User -> id, name, email, classLevel, points, level
   },
 
   // Users
   getAllUsers: async () => {
-    const response = await apiClient.get('/users');
+    const response = await apiClient.get("/users");
     return response.data;
   },
 
   getLeaderboard: async () => {
-    const response = await apiClient.get('/users/leaderboard');
+    const response = await apiClient.get("/users/leaderboard");
     return response.data;
   },
 
@@ -151,11 +164,14 @@ export const api = {
   },
 
   // Get Quiz Questions from backend DB
-  getQuestions: async (subject: string, classLevel: string): Promise<Question[]> => {
+  getQuestions: async (
+    subject: string,
+    classLevel: string,
+  ): Promise<Question[]> => {
     const classLevelCandidates = buildClassLevelCandidates(classLevel);
 
     for (const classLevelCandidate of classLevelCandidates) {
-      const response = await apiClient.get<BackendQuestion[]>('/questions', {
+      const response = await apiClient.get<BackendQuestion[]>("/questions", {
         params: { subject, classLevel: classLevelCandidate },
       });
 
@@ -169,19 +185,27 @@ export const api = {
 
   submitQuiz: async (
     userId: string,
-    answers: SubmittedAnswer[]
+    answers: SubmittedAnswer[],
   ): Promise<QuizSubmissionResponse> => {
-    const response = await apiClient.post<QuizSubmissionResponse>('/questions/submit', {
-      userId,
-      answers,
-    });
+    const response = await apiClient.post<QuizSubmissionResponse>(
+      "/questions/submit",
+      {
+        userId,
+        answers,
+      },
+    );
     return response.data;
   },
 
-  getDashboardAnalytics: async (userId: string): Promise<DashboardAnalytics> => {
-    const response = await apiClient.get<DashboardAnalytics>('/questions/analytics', {
-      params: { userId },
-    });
+  getDashboardAnalytics: async (
+    userId: string,
+  ): Promise<DashboardAnalytics> => {
+    const response = await apiClient.get<DashboardAnalytics>(
+      "/questions/analytics",
+      {
+        params: { userId },
+      },
+    );
     return response.data;
   },
 };
