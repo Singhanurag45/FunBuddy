@@ -33,8 +33,8 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
 
-    @Value("${CORS_ALLOWED_ORIGINS:http://localhost:5173,https://fun-buddy-frontend.vercel.app}")
-    private String corsAllowedOrigins;
+    @Value("${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:5173,https://*.vercel.app,https://fun-buddy-frontend.vercel.app}")
+    private String corsAllowedOriginPatterns;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
@@ -60,12 +60,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        List<String> allowedOrigins = Arrays.stream(corsAllowedOrigins.split(","))
+        List<String> allowedOriginPatterns = Arrays.stream(corsAllowedOriginPatterns.split(","))
                 .map(String::trim)
                 .filter(origin -> !origin.isEmpty())
                 .collect(Collectors.toList());
 
-        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedOriginPatterns(allowedOriginPatterns);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         configuration.setAllowCredentials(true);
