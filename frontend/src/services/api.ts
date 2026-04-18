@@ -1,13 +1,20 @@
 import axios from "axios";
 
 const rawApiUrl = import.meta.env.VITE_API_URL?.trim();
+const isProduction = import.meta.env.PROD;
 
 function resolveApiBaseUrl(): string {
-  if (!rawApiUrl) {
+  if (!rawApiUrl && !isProduction) {
     return "http://localhost:8080/api";
   }
 
-  const withoutTrailingSlash = rawApiUrl.replace(/\/+$/, "");
+  if (!rawApiUrl && isProduction) {
+    throw new Error(
+      "VITE_API_URL is missing in production. Set it in your frontend deployment environment variables.",
+    );
+  }
+
+  const withoutTrailingSlash = (rawApiUrl as string).replace(/\/+$/, "");
   return withoutTrailingSlash.endsWith("/api")
     ? withoutTrailingSlash
     : `${withoutTrailingSlash}/api`;
