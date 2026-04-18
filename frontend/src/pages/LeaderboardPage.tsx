@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Medal, Star, Crown, TrendingUp } from "lucide-react";
+import { Trophy, Crown, TrendingUp } from "lucide-react";
 import { api } from "../services/api";
 import type { UserProfile } from "../services/api";
 import { useAuth } from "../context/AuthContext";
