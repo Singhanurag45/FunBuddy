@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #118AB2;     /* Blue */
+  --color-secondary: #FFD166;   /* Yellow */
+  --color-success: #06D6A0;     /* Green */
+  --color-accent: #EF476F;      /* Pink */
+  --color-background: #F8F9FA;  /* Light SaaS background */
+  
+  /* Kid-friendly sans-serif font stack */
+  --font-sans: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
+  
+  --animate-wiggle: wiggle 1s ease-in-out infinite;
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+}
+
+@layer base {
+  body {
+    @apply m-0 min-h-dvh antialiased bg-background text-slate-800 font-sans;
+  }
+}
