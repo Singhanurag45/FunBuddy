@@ -16,28 +16,40 @@ function getLoginErrorMessage(err: any): string {
   if (status === 404) {
     return "Login API not found (404). Check deployed backend URL and VITE_API_URL.";
   }
-  if(status === 400) {
-    return backendMessage || "Bad request. Please check your input and try again.";
+  if (status === 400) {
+    return (
+      backendMessage || "Bad request. Please check your input and try again."
+    );
   }
-  if(status === 403) {
-    return backendMessage || "Access forbidden. Your account may be blocked or you lack permissions.";
+  if (status === 403) {
+    return (
+      backendMessage ||
+      "Access forbidden. Your account may be blocked or you lack permissions."
+    );
   }
-  if(status === 409) {
-    return backendMessage || "Conflict error. This may indicate an issue with your account or the login process.";
+  if (status === 409) {
+    return (
+      backendMessage ||
+      "Conflict error. This may indicate an issue with your account or the login process."
+    );
   }
-  if(status === 422) {
-    return backendMessage || "Unprocessable entity. Please check your input and try again.";
+  if (status === 422) {
+    return (
+      backendMessage ||
+      "Unprocessable entity. Please check your input and try again."
+    );
   }
-  if(status === 429) {
+  if (status === 429) {
     return backendMessage || "Too many requests. Please try again later.";
   }
-  if(status === 502) {
+  if (status === 502) {
     return "Bad gateway. The backend may be down or experiencing issues. Please try again later.";
+  }
 
   if (!err?.response) {
     return "Unable to reach backend. Verify backend deployment, DATABASE_URL, and CORS settings.";
   }
-  if(status >= 500) {
+  if (status >= 500) {
     return "Server error during login. Please try again later.";
   }
 
