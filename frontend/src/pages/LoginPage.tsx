@@ -5,6 +5,25 @@ import { KeyRound, Mail, ArrowRight, AlertCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
 
+function getLoginErrorMessage(err: any): string {
+  const status = err?.response?.status;
+  const backendMessage = err?.response?.data?.message;
+
+  if (status === 401) {
+    return backendMessage || "Invalid email or password";
+  }
+
+  if (status === 404) {
+    return "Login API not found (404). Check deployed backend URL and VITE_API_URL.";
+  }
+
+  if (!err?.response) {
+    return "Unable to reach backend. Verify backend deployment, DATABASE_URL, and CORS settings.";
+  }
+
+  return backendMessage || `Login failed (HTTP ${status || "unknown"}).`;
+}
+
 export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +41,7 @@ export function LoginPage() {
       await login(authData, authData.token);
       navigate("/");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Invalid email or password");
+      setError(getLoginErrorMessage(err));
     } finally {
       setLoading(false);
     }
