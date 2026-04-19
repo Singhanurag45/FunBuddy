@@ -34,7 +34,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
 
-    @Value("${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:5173,https://*.vercel.app}")
+    @Value("${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:5173,https://fun-buddy-frontend.vercel.app,https://fun-buddy-frontend-git-main-anurag-singhs-projects-5f7d2241.vercel.app,https://fun-buddy-frontend-e5t2285tr-anurag-singhs-projects-5f7d2241.vercel.app}")
     private String corsAllowedOriginPatterns;
 
     // ✅ MAIN SECURITY CONFIG (THIS WAS MISSING)
