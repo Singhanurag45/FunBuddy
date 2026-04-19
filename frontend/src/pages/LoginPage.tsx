@@ -20,6 +20,9 @@ function getLoginErrorMessage(err: any): string {
   if (!err?.response) {
     return "Unable to reach backend. Verify backend deployment, DATABASE_URL, and CORS settings.";
   }
+  if(status >= 500) {
+    return "Server error during login. Please try again later.";
+  }
 
   return backendMessage || `Login failed (HTTP ${status || "unknown"}).`;
 }
