@@ -42,7 +42,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="w-72 bg-white border-r border-slate-100 min-h-screen flex flex-col p-8 z-20 shrink-0">
+    <aside className="hidden lg:flex w-72 bg-white border-r border-slate-100 min-h-screen flex-col p-8 z-20 shrink-0">
       {/* PERFECT LOGO SECTION */}
       <div className="flex items-center gap-4 mb-14 group cursor-pointer">
         <div className="relative">
@@ -149,4 +149,32 @@ export function Sidebar() {
   );
 }
 
+export function MobileBottomNav() {
+  const location = useLocation();
+
+  return (
+    <nav className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200 pb-[env(safe-area-inset-bottom)]">
+      <div className="grid grid-cols-4">
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={cn(
+                "flex flex-col items-center justify-center gap-1 py-3 text-xs font-black transition-colors",
+                isActive ? "text-primary" : "text-slate-500",
+              )}
+            >
+              <item.icon className={cn("w-5 h-5", isActive && "scale-105")} />
+              <span className="leading-none">{item.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
 export const MemoizedSidebar = memo(Sidebar);
+export const MemoizedMobileBottomNav = memo(MobileBottomNav);

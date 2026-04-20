@@ -208,16 +208,18 @@ export function QuizPage() {
   const progress = ((currentIdx + 1) / questions.length) * 100;
 
   return (
-    <div className="py-2 w-full flex flex-col items-center max-w-4xl mx-auto">
-      <header className="mb-10 text-center w-full">
-        <h1 className="text-4xl md:text-5xl font-black text-slate-800 mb-6 tracking-tight">Quiz Time For {user?.classLevel}! 🧠</h1>
-        <div className="mb-5 flex flex-wrap items-center justify-center gap-3">
+    <div className="py-1 sm:py-2 w-full flex flex-col items-center max-w-4xl mx-auto">
+      <header className="mb-6 sm:mb-10 text-center w-full">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-800 mb-4 sm:mb-6 tracking-tight">
+          Quiz Time For {user?.classLevel}! 🧠
+        </h1>
+        <div className="mb-4 sm:mb-5 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
           {QUIZ_SUBJECTS.map((subject) => (
             <button
               key={subject}
               type="button"
               onClick={() => setSelectedSubject(subject)}
-              className={`px-5 py-2 rounded-2xl font-black text-sm transition-all border-2 ${
+              className={`px-4 sm:px-5 py-2 rounded-2xl font-black text-sm transition-all border-2 ${
                 selectedSubject === subject
                   ? 'bg-primary text-white border-primary shadow-lg shadow-primary/30'
                   : 'bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary'
@@ -227,7 +229,7 @@ export function QuizPage() {
             </button>
           ))}
         </div>
-        <div className="w-full bg-slate-200 h-4 rounded-full overflow-hidden p-0.5 relative shadow-inner">
+        <div className="w-full bg-slate-200 h-3 sm:h-4 rounded-full overflow-hidden p-0.5 relative shadow-inner">
           <motion.div 
             className="h-full bg-success rounded-full"
             initial={{ width: 0 }}
