@@ -23,7 +23,7 @@ function resolveApiBaseUrl(): string {
 // Use VITE_API_URL in deployed environments and localhost for local fallback.
 export const apiClient = axios.create({
   baseURL: resolveApiBaseUrl(),
-  timeout: 10000,
+  timeout: 20000,
 });
 
 export interface UserProfile {

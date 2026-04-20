@@ -27,6 +27,9 @@ function getLoginErrorMessage(err: any): string {
       "Access forbidden. Your account may be blocked or you lack permissions."
     );
   }
+  if(status === 408) {
+    return "Login request timed out. Please check your network connection and try again.";
+  }
   if (status === 409) {
     return (
       backendMessage ||
