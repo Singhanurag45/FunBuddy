@@ -1,26 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { DashboardMetrics } from '../components/DashboardMetrics';
 import { motion } from 'framer-motion';
 import { api } from '../services/api';
 import type { DashboardAnalytics } from '../services/api';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from 'recharts';
 
-const PIE_COLORS = ['#22c55e', '#ef4444'];
+const DashboardCharts = lazy(() =>
+  import('../components/DashboardCharts').then((module) => ({
+    default: module.DashboardCharts,
+  }))
+);
 
 const emptyAnalytics: DashboardAnalytics = {
   dailyStreak: 0,
@@ -45,6 +34,7 @@ export function DashboardPage() {
   const { user } = useAuth();
   const [analytics, setAnalytics] = useState<DashboardAnalytics>(emptyAnalytics);
   const [loadingAnalytics, setLoadingAnalytics] = useState(true);
+  const [shouldLoadCharts, setShouldLoadCharts] = useState(false);
 
   useEffect(() => {
     const loadAnalytics = async () => {
@@ -64,13 +54,35 @@ export function DashboardPage() {
     loadAnalytics();
   }, [user?.id, user?.points, user?.level]);
 
-  const pieData = useMemo(
-    () => [
-      { name: 'Correct', value: analytics.totalCorrectAnswers },
-      { name: 'Wrong', value: analytics.totalWrongAnswers },
-    ],
-    [analytics.totalCorrectAnswers, analytics.totalWrongAnswers]
-  );
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadChartsWhenIdle = () => {
+      if (!cancelled) {
+        setShouldLoadCharts(true);
+      }
+    };
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      const idleId = (window as Window & {
+        requestIdleCallback: (callback: () => void) => number;
+        cancelIdleCallback?: (id: number) => void;
+      }).requestIdleCallback(loadChartsWhenIdle);
+
+      return () => {
+        cancelled = true;
+        if ('cancelIdleCallback' in window) {
+          (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(idleId);
+        }
+      };
+    }
+
+    const timeoutId = globalThis.setTimeout(loadChartsWhenIdle, 1200);
+    return () => {
+      cancelled = true;
+      globalThis.clearTimeout(timeoutId);
+    };
+  }, []);
 
   if (!user) {
     return (
@@ -108,78 +120,23 @@ export function DashboardPage() {
         <DashboardMetrics user={user} analytics={analytics} />
       </motion.div>
 
-      <motion.section variants={item} className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100">
-          <h2 className="text-xl font-black text-slate-800 mb-4">Weekly Points Progress</h2>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={analytics.weeklyPoints}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="day" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="points" stroke="#3b82f6" strokeWidth={3} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100">
-          <h2 className="text-xl font-black text-slate-800 mb-4">Subject-wise Accuracy</h2>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={analytics.subjectAccuracy}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="subject" />
-                <YAxis domain={[0, 100]} />
-                <Tooltip />
-                <Bar dataKey="accuracy" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </motion.section>
-
-      <motion.section variants={item} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100 lg:col-span-1">
-          <h2 className="text-xl font-black text-slate-800 mb-4">Correct vs Wrong Answers</h2>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={90} label>
-                  {pieData.map((entry, index) => (
-                    <Cell key={entry.name} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Legend />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100 lg:col-span-2">
-          <h2 className="text-xl font-black text-slate-800 mb-4">Monthly Performance Summary</h2>
-          {loadingAnalytics ? (
-            <div className="h-72 flex items-center justify-center text-slate-400 font-bold">Loading analytics...</div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-72 content-start">
-              <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
-                <p className="text-slate-400 font-bold text-sm uppercase">Quizzes Played</p>
-                <p className="text-4xl font-black text-slate-800 mt-2">{analytics.monthlySummary.quizzesPlayed}</p>
+      <motion.div variants={item}>
+        {shouldLoadCharts ? (
+          <Suspense
+            fallback={
+              <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100 text-slate-400 font-bold min-h-56 flex items-center justify-center">
+                Loading charts...
               </div>
-              <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
-                <p className="text-slate-400 font-bold text-sm uppercase">Points Earned</p>
-                <p className="text-4xl font-black text-slate-800 mt-2">{analytics.monthlySummary.pointsEarned}</p>
-              </div>
-              <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
-                <p className="text-slate-400 font-bold text-sm uppercase">Monthly Accuracy</p>
-                <p className="text-4xl font-black text-slate-800 mt-2">{analytics.monthlySummary.accuracy}%</p>
-              </div>
-            </div>
-          )}
-        </div>
-      </motion.section>
+            }
+          >
+            <DashboardCharts analytics={analytics} loadingAnalytics={loadingAnalytics} />
+          </Suspense>
+        ) : (
+          <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100 text-slate-400 font-bold min-h-56 flex items-center justify-center">
+            Preparing dashboard visualizations...
+          </div>
+        )}
+      </motion.div>
     </motion.div>
   );
 }
