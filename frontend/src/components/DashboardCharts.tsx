@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -13,30 +13,35 @@ import {
   Pie,
   Cell,
   Legend,
-} from 'recharts';
-import type { DashboardAnalytics } from '../services/api';
+} from "recharts";
+import type { DashboardAnalytics } from "../services/api";
 
 interface DashboardChartsProps {
   analytics: DashboardAnalytics;
   loadingAnalytics: boolean;
 }
 
-const PIE_COLORS = ['#22c55e', '#ef4444'];
+const PIE_COLORS = ["#22c55e", "#ef4444"];
 
-export function DashboardCharts({ analytics, loadingAnalytics }: DashboardChartsProps) {
+export function DashboardCharts({
+  analytics,
+  loadingAnalytics,
+}: DashboardChartsProps) {
   const pieData = useMemo(
     () => [
-      { name: 'Correct', value: analytics.totalCorrectAnswers },
-      { name: 'Wrong', value: analytics.totalWrongAnswers },
+      { name: "Correct", value: analytics.totalCorrectAnswers },
+      { name: "Wrong", value: analytics.totalWrongAnswers },
     ],
-    [analytics.totalCorrectAnswers, analytics.totalWrongAnswers]
+    [analytics.totalCorrectAnswers, analytics.totalWrongAnswers],
   );
 
   return (
     <>
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100">
-          <h2 className="text-xl font-black text-slate-800 mb-4">Weekly Points Progress</h2>
+          <h2 className="text-xl font-black text-slate-800 mb-4">
+            Weekly Points Progress
+          </h2>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={analytics.weeklyPoints}>
@@ -44,14 +49,21 @@ export function DashboardCharts({ analytics, loadingAnalytics }: DashboardCharts
                 <XAxis dataKey="day" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="points" stroke="#3b82f6" strokeWidth={3} />
+                <Line
+                  type="monotone"
+                  dataKey="points"
+                  stroke="#3b82f6"
+                  strokeWidth={3}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100">
-          <h2 className="text-xl font-black text-slate-800 mb-4">Subject-wise Accuracy</h2>
+          <h2 className="text-xl font-black text-slate-800 mb-4">
+            Subject-wise Accuracy
+          </h2>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={analytics.subjectAccuracy}>
@@ -68,13 +80,24 @@ export function DashboardCharts({ analytics, loadingAnalytics }: DashboardCharts
 
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100 lg:col-span-1">
-          <h2 className="text-xl font-black text-slate-800 mb-4">Correct vs Wrong Answers</h2>
+          <h2 className="text-xl font-black text-slate-800 mb-4">
+            Correct vs Wrong Answers
+          </h2>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={90} label>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius={90}
+                  label
+                >
                   {pieData.map((entry, index) => (
-                    <Cell key={entry.name} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                    <Cell
+                      key={entry.name}
+                      fill={PIE_COLORS[index % PIE_COLORS.length]}
+                    />
                   ))}
                 </Pie>
                 <Legend />
@@ -85,22 +108,38 @@ export function DashboardCharts({ analytics, loadingAnalytics }: DashboardCharts
         </div>
 
         <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100 lg:col-span-2">
-          <h2 className="text-xl font-black text-slate-800 mb-4">Monthly Performance Summary</h2>
+          <h2 className="text-xl font-black text-slate-800 mb-4">
+            Monthly Performance Summary
+          </h2>
           {loadingAnalytics ? (
-            <div className="h-72 flex items-center justify-center text-slate-400 font-bold">Loading analytics...</div>
+            <div className="h-72 flex items-center justify-center text-slate-400 font-bold">
+              Loading analytics...
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-72 content-start">
               <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
-                <p className="text-slate-400 font-bold text-sm uppercase">Quizzes Played</p>
-                <p className="text-4xl font-black text-slate-800 mt-2">{analytics.monthlySummary.quizzesPlayed}</p>
+                <p className="text-slate-400 font-bold text-sm uppercase">
+                  Quizzes Played
+                </p>
+                <p className="text-4xl font-black text-slate-800 mt-2">
+                  {analytics.monthlySummary.quizzesPlayed}
+                </p>
               </div>
               <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
-                <p className="text-slate-400 font-bold text-sm uppercase">Points Earned</p>
-                <p className="text-4xl font-black text-slate-800 mt-2">{analytics.monthlySummary.pointsEarned}</p>
+                <p className="text-slate-400 font-bold text-sm uppercase">
+                  Points Earned
+                </p>
+                <p className="text-4xl font-black text-slate-800 mt-2">
+                  {analytics.monthlySummary.pointsEarned}
+                </p>
               </div>
               <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
-                <p className="text-slate-400 font-bold text-sm uppercase">Monthly Accuracy</p>
-                <p className="text-4xl font-black text-slate-800 mt-2">{analytics.monthlySummary.accuracy}%</p>
+                <p className="text-slate-400 font-bold text-sm uppercase">
+                  Monthly Accuracy
+                </p>
+                <p className="text-4xl font-black text-slate-800 mt-2">
+                  {analytics.monthlySummary.accuracy}%
+                </p>
               </div>
             </div>
           )}

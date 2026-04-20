@@ -1,28 +1,28 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { User, KeyRound, Mail, Sparkles, AlertCircle, GraduationCap } from 'lucide-react';
-import { api } from '../services/api';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { User, KeyRound, Mail, AlertCircle, GraduationCap } from "lucide-react";
+import { api } from "../services/api";
 
 export function RegisterPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [classLevel, setClassLevel] = useState('Class 1');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [classLevel, setClassLevel] = useState("Class 1");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
     try {
       await api.register({ name, email, password, classLevel });
       // If successful, navigate them to login
-      navigate('/login');
+      navigate("/login");
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -35,13 +35,21 @@ export function RegisterPage() {
 
       <div className="mb-6 text-center z-10">
         <div className="w-20 h-20 mx-auto rounded-[1.5rem] bg-secondary/80 flex items-center justify-center transform rotate-6 shadow-xl shadow-secondary/20 mb-6 text-yellow-800">
-          <Sparkles className="w-10 h-10" />
+          <img
+            src="/Logo.webp"
+            alt="FunBuddy Logo"
+            className="w-12 h-12 object-contain drop-shadow-md"
+          />
         </div>
-        <h1 className="text-4xl md:text-5xl font-black text-slate-800 tracking-tight mb-2">Join the Club! 🎉</h1>
-        <p className="text-xl font-bold text-slate-500">Create an account to start earning points.</p>
+        <h1 className="text-4xl md:text-5xl font-black text-slate-800 tracking-tight mb-2">
+          Join the Club! 🎉
+        </h1>
+        <p className="text-xl font-bold text-slate-500">
+          Create an account to start earning points.
+        </p>
       </div>
 
-      <motion.form 
+      <motion.form
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 25, delay: 0.1 }}
@@ -57,13 +65,15 @@ export function RegisterPage() {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-black text-slate-400 uppercase tracking-widest ml-2">Your Hero Name</label>
+            <label className="text-sm font-black text-slate-400 uppercase tracking-widest ml-2">
+              Your Hero Name
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400">
                 <User className="h-6 w-6" />
               </div>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -74,12 +84,14 @@ export function RegisterPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-black text-slate-400 uppercase tracking-widest ml-2">Class Level</label>
+            <label className="text-sm font-black text-slate-400 uppercase tracking-widest ml-2">
+              Class Level
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400">
                 <GraduationCap className="h-6 w-6" />
               </div>
-              <select 
+              <select
                 value={classLevel}
                 onChange={(e) => setClassLevel(e.target.value)}
                 className="w-full pl-14 pr-4 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 focus:border-success focus:bg-white focus:ring-4 focus:ring-success/10 outline-none transition-all text-lg font-bold text-slate-800 shadow-sm appearance-none"
@@ -94,13 +106,15 @@ export function RegisterPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-black text-slate-400 uppercase tracking-widest ml-2">Email</label>
+            <label className="text-sm font-black text-slate-400 uppercase tracking-widest ml-2">
+              Email
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400">
                 <Mail className="h-6 w-6" />
               </div>
-              <input 
-                type="email" 
+              <input
+                type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -111,13 +125,15 @@ export function RegisterPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-black text-slate-400 uppercase tracking-widest ml-2">Secret Password</label>
+            <label className="text-sm font-black text-slate-400 uppercase tracking-widest ml-2">
+              Secret Password
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400">
                 <KeyRound className="h-6 w-6" />
               </div>
-              <input 
-                type="password" 
+              <input
+                type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -144,8 +160,11 @@ export function RegisterPage() {
       </motion.form>
 
       <div className="mt-8 z-10 text-center font-bold text-slate-500 text-lg">
-        Already a member?{' '}
-        <Link to="/login" className="text-success font-black hover:text-emerald-700 transition-colors">
+        Already a member?{" "}
+        <Link
+          to="/login"
+          className="text-success font-black hover:text-emerald-700 transition-colors"
+        >
           Log in
         </Link>
       </div>

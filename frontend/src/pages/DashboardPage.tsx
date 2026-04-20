@@ -1,14 +1,14 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { DashboardMetrics } from '../components/DashboardMetrics';
-import { motion } from 'framer-motion';
-import { api } from '../services/api';
-import type { DashboardAnalytics } from '../services/api';
+import { lazy, Suspense, useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { DashboardMetrics } from "../components/DashboardMetrics";
+import { motion } from "framer-motion";
+import { api } from "../services/api";
+import type { DashboardAnalytics } from "../services/api";
 
 const DashboardCharts = lazy(() =>
-  import('../components/DashboardCharts').then((module) => ({
+  import("../components/DashboardCharts").then((module) => ({
     default: module.DashboardCharts,
-  }))
+  })),
 );
 
 const emptyAnalytics: DashboardAnalytics = {
@@ -19,9 +19,9 @@ const emptyAnalytics: DashboardAnalytics = {
   totalWrongAnswers: 0,
   weeklyPoints: [],
   subjectAccuracy: [
-    { subject: 'Math', accuracy: 0 },
-    { subject: 'Science', accuracy: 0 },
-    { subject: 'English', accuracy: 0 },
+    { subject: "Math", accuracy: 0 },
+    { subject: "Science", accuracy: 0 },
+    { subject: "English", accuracy: 0 },
   ],
   monthlySummary: {
     quizzesPlayed: 0,
@@ -32,7 +32,8 @@ const emptyAnalytics: DashboardAnalytics = {
 
 export function DashboardPage() {
   const { user } = useAuth();
-  const [analytics, setAnalytics] = useState<DashboardAnalytics>(emptyAnalytics);
+  const [analytics, setAnalytics] =
+    useState<DashboardAnalytics>(emptyAnalytics);
   const [loadingAnalytics, setLoadingAnalytics] = useState(true);
   const [shouldLoadCharts, setShouldLoadCharts] = useState(false);
 
@@ -44,7 +45,7 @@ export function DashboardPage() {
         const response = await api.getDashboardAnalytics(user.id);
         setAnalytics(response);
       } catch (error) {
-        console.error('Failed to load dashboard analytics', error);
+        console.error("Failed to load dashboard analytics", error);
         setAnalytics(emptyAnalytics);
       } finally {
         setLoadingAnalytics(false);
@@ -63,16 +64,20 @@ export function DashboardPage() {
       }
     };
 
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      const idleId = (window as Window & {
-        requestIdleCallback: (callback: () => void) => number;
-        cancelIdleCallback?: (id: number) => void;
-      }).requestIdleCallback(loadChartsWhenIdle);
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const idleId = (
+        window as Window & {
+          requestIdleCallback: (callback: () => void) => number;
+          cancelIdleCallback?: (id: number) => void;
+        }
+      ).requestIdleCallback(loadChartsWhenIdle);
 
       return () => {
         cancelled = true;
-        if ('cancelIdleCallback' in window) {
-          (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(idleId);
+        if ("cancelIdleCallback" in window) {
+          (
+            window as Window & { cancelIdleCallback?: (id: number) => void }
+          ).cancelIdleCallback?.(idleId);
         }
       };
     }
@@ -106,10 +111,16 @@ export function DashboardPage() {
   };
 
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="max-w-6xl mx-auto py-6 px-4">
+    <motion.div
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="max-w-6xl mx-auto py-6 px-4"
+    >
       <motion.header variants={item} className="mb-10">
         <h1 className="text-5xl font-black text-slate-900 mb-2 tracking-tight">
-          Welcome back, <span className="text-primary">{user.name.split(' ')[0]}</span>!
+          Welcome back,{" "}
+          <span className="text-primary">{user.name.split(" ")[0]}</span>!
         </h1>
         <p className="text-xl text-slate-500 font-medium">
           Your live learning analytics for quizzes and progress.
@@ -129,7 +140,10 @@ export function DashboardPage() {
               </div>
             }
           >
-            <DashboardCharts analytics={analytics} loadingAnalytics={loadingAnalytics} />
+            <DashboardCharts
+              analytics={analytics}
+              loadingAnalytics={loadingAnalytics}
+            />
           </Suspense>
         ) : (
           <div className="bg-white p-6 rounded-4xl shadow-sm border border-slate-100 text-slate-400 font-bold min-h-56 flex items-center justify-center">

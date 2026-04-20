@@ -27,7 +27,7 @@ function getLoginErrorMessage(err: any): string {
       "Access forbidden. Your account may be blocked or you lack permissions."
     );
   }
-  if(status === 408) {
+  if (status === 408) {
     return "Login request timed out. Please check your network connection and try again.";
   }
   if (status === 409) {
@@ -89,7 +89,11 @@ export function LoginPage() {
 
       <div className="mb-8 text-center z-10">
         <div className="w-20 h-20 mx-auto rounded-[1.5rem] bg-primary flex items-center justify-center transform -rotate-6 shadow-xl shadow-primary/20 mb-6">
-          <span className="text-white font-black text-4xl">L</span>
+          <img
+            src="/Logo.webp"
+            alt="FunBuddy Logo"
+            className="w-12 h-12 object-contain drop-shadow-md"
+          />
         </div>
         <h1 className="text-4xl md:text-5xl font-black text-slate-800 tracking-tight mb-3">
           Welcome Back! 🚀

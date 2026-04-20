@@ -51,7 +51,7 @@ export function Sidebar() {
           {/* Logo Container */}
           <div className="relative w-12 h-12 bg-gradient-to-br from-primary to-indigo-600 rounded-[1.25rem] flex items-center justify-center shadow-lg shadow-primary/30 transform group-hover:rotate-6 transition-transform duration-300">
             <img
-              src="/Logo.png"
+              src="/Logo.webp"
               alt="FunBuddy Logo"
               className="w-7 h-7 object-contain drop-shadow-md"
               onError={(e) => {
