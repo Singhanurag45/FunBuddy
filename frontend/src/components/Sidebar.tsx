@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Gamepad2, Trophy, Settings, LogOut } from "lucide-react";
 import { cn } from "../lib/utils";
@@ -147,3 +148,5 @@ export function Sidebar() {
     </aside>
   );
 }
+
+export const MemoizedSidebar = memo(Sidebar);

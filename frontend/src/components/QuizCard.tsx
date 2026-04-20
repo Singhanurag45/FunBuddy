@@ -1,8 +1,8 @@
+import { memo, useCallback, useState } from 'react';
 import type { Question } from '../services/api';
 import { motion } from 'framer-motion';
 import { HelpCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { useState } from 'react';
 
 interface QuizCardProps {
   question: Question;
@@ -12,7 +12,7 @@ interface QuizCardProps {
 export function QuizCard({ question, onAnswer }: QuizCardProps) {
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
-  const handleSelect = (idx: number) => {
+  const handleSelect = useCallback((idx: number) => {
     if (selectedIdx !== null) return;
     setSelectedIdx(idx);
     
@@ -21,7 +21,7 @@ export function QuizCard({ question, onAnswer }: QuizCardProps) {
       onAnswer(question.options[idx]);
       setSelectedIdx(null);
     }, 1200);
-  };
+  }, [onAnswer, question.options, selectedIdx]);
 
   return (
     <motion.div 
@@ -86,3 +86,5 @@ export function QuizCard({ question, onAnswer }: QuizCardProps) {
     </motion.div>
   );
 }
+
+export const MemoizedQuizCard = memo(QuizCard);

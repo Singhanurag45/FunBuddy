@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { api } from '../services/api';
 import type { Question } from '../services/api';
 import type { SubmittedAnswer } from '../services/api';
 import type { QuizSubmissionResponse } from '../services/api';
-import { QuizCard } from '../components/QuizCard';
+import { MemoizedQuizCard } from '../components/QuizCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 
@@ -60,7 +60,17 @@ export function QuizPage() {
     loadQuestions();
   }, [selectedSubject, user?.classLevel]);
 
-  const handleAnswer = async (selectedAnswer: string) => {
+  const handleNext = useCallback(async (latestAnswers?: SubmittedAnswer[]) => {
+    const safeAnswers = Array.isArray(latestAnswers) ? latestAnswers : answers;
+    if (currentIdx < questions.length - 1) {
+      setCurrentIdx((prev) => prev + 1);
+    } else {
+      setAnswers(safeAnswers);
+      setReadyToSubmit(true);
+    }
+  }, [answers, currentIdx, questions.length]);
+
+  const handleAnswer = useCallback(async (selectedAnswer: string) => {
     const currentQuestion = questions[currentIdx];
     if (!currentQuestion) return;
 
@@ -75,17 +85,7 @@ export function QuizPage() {
 
     // Move to the next question immediately after an answer.
     await handleNext(nextAnswers);
-  };
-
-  const handleNext = async (latestAnswers?: SubmittedAnswer[]) => {
-    const safeAnswers = Array.isArray(latestAnswers) ? latestAnswers : answers;
-    if (currentIdx < questions.length - 1) {
-      setCurrentIdx(currentIdx + 1);
-    } else {
-      setAnswers(safeAnswers);
-      setReadyToSubmit(true);
-    }
-  };
+  }, [answers, currentIdx, handleNext, questions]);
 
   const handleSubmitQuiz = async () => {
     if (!user?.id || answers.length === 0) {
@@ -249,7 +249,7 @@ export function QuizPage() {
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           className="w-full"
         >
-          <QuizCard
+          <MemoizedQuizCard
             question={questions[currentIdx]} 
             onAnswer={handleAnswer} 
           />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Crown, TrendingUp } from "lucide-react";
 import { api } from "../services/api";
@@ -18,6 +18,9 @@ export function LeaderboardPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const topThree = useMemo(() => leaderboard.slice(0, 3), [leaderboard]);
+  const theRest = useMemo(() => leaderboard.slice(3), [leaderboard]);
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-[80vh] gap-4">
@@ -28,9 +31,6 @@ export function LeaderboardPage() {
       </div>
     );
   }
-
-  const topThree = leaderboard.slice(0, 3);
-  const theRest = leaderboard.slice(3);
 
   return (
     <div className="py-8 max-w-4xl mx-auto px-4">
@@ -55,7 +55,7 @@ export function LeaderboardPage() {
       <div className="flex flex-row items-end justify-center gap-2 md:gap-4 mb-12 h-64">
         {/* 2nd Place */}
         {topThree[1] && (
-          <PodiumStep
+          <MemoizedPodiumStep
             user={topThree[1]}
             rank={2}
             height="h-40"
@@ -65,7 +65,7 @@ export function LeaderboardPage() {
         )}
         {/* 1st Place */}
         {topThree[0] && (
-          <PodiumStep
+          <MemoizedPodiumStep
             user={topThree[0]}
             rank={1}
             height="h-56"
@@ -76,7 +76,7 @@ export function LeaderboardPage() {
         )}
         {/* 3rd Place */}
         {topThree[2] && (
-          <PodiumStep
+          <MemoizedPodiumStep
             user={topThree[2]}
             rank={3}
             height="h-32"
@@ -92,7 +92,7 @@ export function LeaderboardPage() {
           <AnimatePresence>
             {theRest.length > 0
               ? theRest.map((user, idx) => (
-                  <LeaderboardRow
+                  <MemoizedLeaderboardRow
                     key={user.id}
                     user={user}
                     rank={idx + 4}
@@ -111,7 +111,16 @@ export function LeaderboardPage() {
   );
 }
 
-function PodiumStep({ user, rank, height, delay, color, isWinner }: any) {
+interface PodiumStepProps {
+  user: UserProfile;
+  rank: number;
+  height: string;
+  delay: number;
+  color: string;
+  isWinner?: boolean;
+}
+
+function PodiumStep({ user, rank, height, delay, color, isWinner }: PodiumStepProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -148,7 +157,13 @@ function PodiumStep({ user, rank, height, delay, color, isWinner }: any) {
   );
 }
 
-function LeaderboardRow({ user, rank, isCurrentUser }: any) {
+interface LeaderboardRowProps {
+  user: UserProfile;
+  rank: number;
+  isCurrentUser: boolean;
+}
+
+function LeaderboardRow({ user, rank, isCurrentUser }: LeaderboardRowProps) {
   return (
     <motion.div
       layout
@@ -186,3 +201,6 @@ function LeaderboardRow({ user, rank, isCurrentUser }: any) {
     </motion.div>
   );
 }
+
+const MemoizedPodiumStep = memo(PodiumStep);
+const MemoizedLeaderboardRow = memo(LeaderboardRow);

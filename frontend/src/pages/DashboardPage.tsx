@@ -1,13 +1,13 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { DashboardMetrics } from "../components/DashboardMetrics";
+import { MemoizedDashboardMetrics } from "../components/DashboardMetrics";
 import { motion } from "framer-motion";
 import { api } from "../services/api";
 import type { DashboardAnalytics } from "../services/api";
 
 const DashboardCharts = lazy(() =>
   import("../components/DashboardCharts").then((module) => ({
-    default: module.DashboardCharts,
+    default: module.MemoizedDashboardCharts,
   })),
 );
 
@@ -53,7 +53,7 @@ export function DashboardPage() {
     };
 
     loadAnalytics();
-  }, [user?.id, user?.points, user?.level]);
+  }, [user?.id]);
 
   useEffect(() => {
     let cancelled = false;
@@ -128,7 +128,7 @@ export function DashboardPage() {
       </motion.header>
 
       <motion.div variants={item}>
-        <DashboardMetrics user={user} analytics={analytics} />
+        <MemoizedDashboardMetrics user={user} analytics={analytics} />
       </motion.div>
 
       <motion.div variants={item}>

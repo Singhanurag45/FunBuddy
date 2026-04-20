@@ -46,6 +46,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     initAuth();
   }, []);
 
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('learnify_user');
+    localStorage.removeItem('learnify_token');
+    api.setToken(null);
+  };
+
   const login = async (userData: any, token: string) => {
     // Transform missing fields for our UI
     const profileData: UserProfile = {
@@ -69,13 +76,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(profileData);
     localStorage.setItem('learnify_user', JSON.stringify(profileData));
     localStorage.setItem('learnify_token', token);
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('learnify_user');
-    localStorage.removeItem('learnify_token');
-    api.setToken(null);
   };
 
   const refreshUser = async () => {

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { DashboardAnalytics, UserProfile } from '../services/api';
 import { motion } from 'framer-motion';
 import { Star, Flame, Trophy, Target, BookOpenCheck } from 'lucide-react';
@@ -106,3 +107,5 @@ export function DashboardMetrics({ user, analytics }: MetricProps) {
     </motion.div>
   );
 }
+
+export const MemoizedDashboardMetrics = memo(DashboardMetrics);

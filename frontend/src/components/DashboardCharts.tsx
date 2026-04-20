@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -27,6 +27,10 @@ export function DashboardCharts({
   analytics,
   loadingAnalytics,
 }: DashboardChartsProps) {
+  const isMobile =
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 768px)").matches;
+
   const pieData = useMemo(
     () => [
       { name: "Correct", value: analytics.totalCorrectAnswers },
@@ -54,6 +58,7 @@ export function DashboardCharts({
                   dataKey="points"
                   stroke="#3b82f6"
                   strokeWidth={3}
+                  isAnimationActive={!isMobile}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -71,7 +76,12 @@ export function DashboardCharts({
                 <XAxis dataKey="subject" />
                 <YAxis domain={[0, 100]} />
                 <Tooltip />
-                <Bar dataKey="accuracy" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
+                <Bar
+                  dataKey="accuracy"
+                  fill="#8b5cf6"
+                  radius={[8, 8, 0, 0]}
+                  isAnimationActive={!isMobile}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -92,6 +102,7 @@ export function DashboardCharts({
                   nameKey="name"
                   outerRadius={90}
                   label
+                  isAnimationActive={!isMobile}
                 >
                   {pieData.map((entry, index) => (
                     <Cell
@@ -148,3 +159,5 @@ export function DashboardCharts({
     </>
   );
 }
+
+export const MemoizedDashboardCharts = memo(DashboardCharts);

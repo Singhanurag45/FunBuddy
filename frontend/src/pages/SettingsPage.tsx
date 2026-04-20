@@ -1,3 +1,4 @@
+import React, { memo } from "react";
 import { motion } from "framer-motion";
 import {
   Settings,
@@ -11,6 +12,7 @@ import {
   Lock,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { cn } from "../lib/utils";
 
 export function SettingsPage() {
   const { user } = useAuth();
@@ -98,9 +100,9 @@ export function SettingsPage() {
 
         {/* Quick Toggles */}
         <motion.div variants={item} className="md:col-span-1 space-y-4">
-          <ToggleCard icon={<Volume2 />} label="Sound Effects" defaultChecked />
-          <ToggleCard icon={<Bell />} label="Daily Reminders" defaultChecked />
-          <ToggleCard icon={<Palette />} label="Dark Theme" />
+          <MemoizedToggleCard icon={<Volume2 />} label="Sound Effects" defaultChecked />
+          <MemoizedToggleCard icon={<Bell />} label="Daily Reminders" defaultChecked />
+          <MemoizedToggleCard icon={<Palette />} label="Dark Theme" />
         </motion.div>
 
         {/* Parental Controls Section */}
@@ -194,6 +196,4 @@ function ToggleCard({
     </div>
   );
 }
-
-import React from "react";
-import { cn } from "../lib/utils";
+const MemoizedToggleCard = memo(ToggleCard);
