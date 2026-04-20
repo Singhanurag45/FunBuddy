@@ -1,25 +1,38 @@
 import { memo } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Home, Gamepad2, Trophy, Settings, LogOut } from "lucide-react";
 import { cn } from "../lib/utils";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 
 const navItems = [
-  { path: "/", icon: Home, label: "Dashboard", theme: "primary" },
-  { path: "/quiz", icon: Gamepad2, label: "Play Quiz", theme: "success" },
+  { path: "/dashboard", icon: Home, label: "Dashboard", theme: "primary" },
+  { path: "/dashboard/quiz", icon: Gamepad2, label: "Play Quiz", theme: "success" },
   {
-    path: "/leaderboard",
+    path: "/dashboard/leaderboard",
     icon: Trophy,
     label: "Leaderboard",
     theme: "secondary",
   },
-  { path: "/settings", icon: Settings, label: "Settings", theme: "accent" },
+  { path: "/dashboard/settings", icon: Settings, label: "Settings", theme: "accent" },
 ];
+
+const isNavItemActive = (pathname: string, itemPath: string) => {
+  if (itemPath === "/dashboard") {
+    return pathname === "/dashboard" || pathname === "/dashboard/";
+  }
+  return pathname === itemPath || pathname.startsWith(`${itemPath}/`);
+};
 
 export function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/", { replace: true });
+  };
 
   const getThemeClasses = (theme: string, active: boolean) => {
     const base =
@@ -42,7 +55,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="hidden lg:flex w-72 bg-white border-r border-slate-100 min-h-screen flex-col p-8 z-20 shrink-0">
+    <aside className="hidden lg:flex w-72 h-screen sticky top-0 bg-white border-r border-slate-100 flex-col p-8 z-20 shrink-0">
       {/* PERFECT LOGO SECTION */}
       <div className="flex items-center gap-4 mb-14 group cursor-pointer">
         <div className="relative">
@@ -76,7 +89,7 @@ export function Sidebar() {
       {/* NAVIGATION */}
       <nav className="flex-1 space-y-2">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive = isNavItemActive(location.pathname, item.path);
           return (
             <Link key={item.path} to={item.path} className="block">
               <motion.div
@@ -115,13 +128,15 @@ export function Sidebar() {
 
       {/* USER FOOTER */}
       <div className="mt-auto space-y-4">
-        <button
-          onClick={logout}
-          className="w-full flex items-center justify-between px-5 py-3 rounded-2xl bg-slate-50 text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-rose-50 hover:text-rose-500 transition-all group"
+        <motion.button
+          whileHover={{ x: 4 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={handleLogout}
+          className="relative w-full flex items-center gap-4 px-4 py-3 rounded-2xl transition-all font-black tracking-tight overflow-hidden group text-slate-400 hover:text-rose-500 hover:bg-rose-50"
         >
-          Log Out
-          <LogOut className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-        </button>
+          <LogOut className="w-6 h-6 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" />
+          <span className="text-sm">Logout</span>
+        </motion.button>
 
         <div className="bg-slate-900 flex items-center gap-3 p-4 rounded-[2rem] shadow-xl shadow-slate-200">
           <div className="relative">
@@ -156,7 +171,7 @@ export function MobileBottomNav() {
     <nav className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200 pb-[env(safe-area-inset-bottom)]">
       <div className="grid grid-cols-4">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive = isNavItemActive(location.pathname, item.path);
           return (
             <Link
               key={item.path}

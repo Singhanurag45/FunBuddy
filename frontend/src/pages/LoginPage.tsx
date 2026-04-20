@@ -74,7 +74,7 @@ export function LoginPage() {
     try {
       const authData = await api.login({ email, password });
       await login(authData, authData.token);
-      navigate("/");
+      navigate("/dashboard");
     } catch (err: any) {
       setError(getLoginErrorMessage(err));
     } finally {

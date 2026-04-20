@@ -31,12 +31,29 @@ const RegisterPage = lazy(() =>
     default: module.RegisterPage,
   })),
 );
+const LandingPage = lazy(() =>
+  import("./pages/LandingPage").then((module) => ({
+    default: module.LandingPage,
+  })),
+);
 
 // Protected Route wrapper
 function RequireAuth({ children }: { children: ReactElement }) {
   const { user, loading } = useAuth();
   if (loading) return null;
   return user ? children : <Navigate to="/login" replace />;
+}
+
+function RootEntry() {
+  const { user, loading } = useAuth();
+  const token = typeof window !== "undefined" ? localStorage.getItem("learnify_token") : null;
+
+  if (loading) return null;
+  if (user || token) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <LandingPage />;
 }
 
 function App() {
@@ -53,9 +70,10 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/" element={<RootEntry />} />
 
             <Route
-              path="/"
+              path="/dashboard"
               element={
                 <RequireAuth>
                   <Layout />
@@ -67,6 +85,7 @@ function App() {
               <Route path="leaderboard" element={<LeaderboardPage />} />
               <Route path="settings" element={<SettingsPage />} />
             </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
