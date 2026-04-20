@@ -14,31 +14,52 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<UserProfile | null>(() => {
+    if (typeof window === 'undefined') return null;
+
+    const storedUser = localStorage.getItem('learnify_user');
+    if (!storedUser) return null;
+
+    try {
+      return JSON.parse(storedUser) as UserProfile;
+    } catch {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return Boolean(localStorage.getItem('learnify_token'));
+  });
 
   // Initialize from Local Storage
   useEffect(() => {
     const initAuth = async () => {
+      if (typeof window === 'undefined') {
+        setLoading(false);
+        return;
+      }
+
       const storedUser = localStorage.getItem('learnify_user');
       const token = localStorage.getItem('learnify_token');
-      
-      if (storedUser && token) {
+
+      if (token) {
         try {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          // Set headers immediately
+          const parsedUser = storedUser ? JSON.parse(storedUser) : null;
           api.setToken(token);
-          
-          // Optionally, wait to strictly fetch latest profile from backend before displaying
-          // This keeps points perfectly in sync if they left the window open
-          const latestProfile = await api.getUserProfile(parsedUser.id || parsedUser.userId);
-          setUser(latestProfile);
-          localStorage.setItem('learnify_user', JSON.stringify(latestProfile));
+
+          if (parsedUser) {
+            setUser(parsedUser);
+            const latestProfile = await api.getUserProfile(parsedUser.id || parsedUser.userId);
+            setUser(latestProfile);
+            localStorage.setItem('learnify_user', JSON.stringify(latestProfile));
+          }
         } catch (error) {
           console.error("Failed to restore session", error);
           logout();
         }
+      } else {
+        setLoading(false);
+        return;
       }
       setLoading(false);
     };
@@ -54,19 +75,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const login = async (userData: any, token: string) => {
-    // Transform missing fields for our UI
     const profileData: UserProfile = {
       id: userData.userId || userData.id,
       name: userData.name,
       points: userData.points || 0,
       level: userData.level || 1,
-      streak: userData.streak || 0, // Not in backend yet, defaulting to 0
-      badges: userData.badges || [], // Defaulting to empty
+      streak: userData.streak || 0,
+      badges: userData.badges || [],
     };
-    
-    // Attempt to enrich it with actual backend points/levels via the ID lookup
+
     try {
-      api.setToken(token); // Required for authenticated requests!
+      api.setToken(token);
       const fetchedFullProfile = await api.getUserProfile(profileData.id);
       Object.assign(profileData, fetchedFullProfile);
     } catch(e) {
