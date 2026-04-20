@@ -123,8 +123,20 @@ export function DashboardPage() {
           <span className="text-primary">{user.name.split(" ")[0]}</span>!
         </h1>
         <p className="text-xl text-slate-500 font-medium">
-          Your live learning analytics for quizzes and progress.
+          Your live learning analytics for quizzes and quests.
         </p>
+        <motion.div
+          whileHover={{ rotate: [0, -2, 2, 0] }}
+          className="mt-5 inline-flex items-start gap-3 rounded-3xl border border-primary/20 bg-white px-4 py-3 shadow-sm"
+        >
+          <span className="text-3xl leading-none">🤖</span>
+          <div>
+            <p className="text-xs font-black uppercase tracking-wider text-primary">Buddy Bot</p>
+            <p className="text-sm font-semibold text-slate-700">
+              Daily quest: Finish one quiz to earn 5 magic beans.
+            </p>
+          </div>
+        </motion.div>
       </motion.header>
 
       <motion.div variants={item}>

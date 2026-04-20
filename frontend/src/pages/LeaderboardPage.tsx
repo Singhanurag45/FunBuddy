@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Crown, TrendingUp } from "lucide-react";
+import { Trophy, Crown, TrendingUp, Star } from "lucide-react";
 import { api } from "../services/api";
 import type { UserProfile } from "../services/api";
 import { useAuth } from "../context/AuthContext";
@@ -43,7 +43,7 @@ export function LeaderboardPage() {
           <Trophy className="w-12 h-12 text-white" />
         </motion.div>
         <h1 className="text-5xl md:text-6xl font-black text-slate-900 mb-4 tracking-tighter leading-none">
-          Top <span className="text-secondary">Scholars</span>
+          <span className="text-secondary">Star</span> Performers
         </h1>
         <div className="flex items-center justify-center gap-2 text-slate-500 font-bold">
           <TrendingUp className="w-5 h-5 text-success" />
@@ -88,6 +88,17 @@ export function LeaderboardPage() {
 
       {/* List Section */}
       <div className="bg-white rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-slate-100 overflow-hidden">
+        <div className="px-6 pt-5 flex flex-wrap items-center justify-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-black text-amber-700">
+            <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" /> Gold Star
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700">
+            <Star className="w-3.5 h-3.5 fill-slate-500 text-slate-500" /> Silver Star
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-black text-orange-700">
+            <Star className="w-3.5 h-3.5 fill-orange-500 text-orange-500" /> Bronze Star
+          </span>
+        </div>
         <div className="p-2 space-y-2">
           <AnimatePresence>
             {theRest.length > 0
@@ -144,7 +155,7 @@ function PodiumStep({ user, rank, height, delay, color, isWinner }: PodiumStepPr
         </div>
       </div>
       <div
-        className={`w-full ${height} ${color} rounded-t-[2rem] flex flex-col items-center justify-start pt-4 px-2 shadow-inner`}
+        className={`w-full ${height} ${color} rounded-t-4xl flex flex-col items-center justify-start pt-4 px-2 shadow-inner`}
       >
         <span className="text-white font-black text-xs md:text-sm truncate w-full text-center">
           {user.name.split(" ")[0]}
@@ -169,7 +180,7 @@ function LeaderboardRow({ user, rank, isCurrentUser }: LeaderboardRowProps) {
       layout
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`flex items-center gap-4 p-4 rounded-[2rem] transition-all hover:scale-[1.01] ${
+      className={`flex items-center gap-4 p-4 rounded-4xl transition-all hover:scale-[1.01] ${
         isCurrentUser
           ? "bg-primary/10 border-2 border-primary/20"
           : "hover:bg-slate-50"

@@ -6,6 +6,7 @@ import type { QuizSubmissionResponse } from '../services/api';
 import { MemoizedQuizCard } from '../components/QuizCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import confetti from "canvas-confetti";
 
 const QUIZ_SUBJECTS = ['Math', 'Science', 'English'] as const;
 const MAX_QUESTIONS_PER_QUIZ = 10;
@@ -101,6 +102,12 @@ export function QuizPage() {
       await refreshUser();
       setReadyToSubmit(false);
       setCompleted(true);
+      void confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.65 },
+        colors: ["#118AB2", "#06D6A0", "#FFD166", "#EF476F"],
+      });
     } catch (error) {
       console.error('Failed to submit quiz result', error);
       setSubmissionError('Could not save your progress. Please try another quiz.');
@@ -140,7 +147,7 @@ export function QuizPage() {
         animate={{ scale: 1, opacity: 1 }}
         className="flex flex-col items-center justify-center min-h-[60vh] text-center"
       >
-        <h1 className="text-4xl font-black text-slate-800 mb-4 tracking-tight">Ready to Submit?</h1>
+        <h1 className="text-4xl font-black text-slate-800 mb-4 tracking-tight">Ready to check your answers?</h1>
         <p className="text-base font-bold text-primary mb-2">Subject: {selectedSubject}</p>
         <p className="text-xl font-bold text-slate-500 mb-8">
           You answered {answers.length} out of {questions.length} questions.
@@ -155,7 +162,7 @@ export function QuizPage() {
           onClick={handleSubmitQuiz}
           className="px-10 py-5 bg-success text-white rounded-4xl font-black text-2xl shadow-xl shadow-success/30 disabled:opacity-70"
         >
-          {submittingQuiz ? 'Submitting...' : 'Submit Quiz'}
+          {submittingQuiz ? 'Checking...' : 'Check My Answers!'}
         </motion.button>
       </motion.div>
     );
@@ -182,6 +189,13 @@ export function QuizPage() {
           </div>
         ) : (
           <p className="text-xl font-bold text-slate-500 mb-10">You did an amazing job.</p>
+        )}
+        {result && (
+          <p className="mb-6 text-lg font-black text-success">
+            {result.correctAnswersCount >= questions.length / 2
+              ? "Happy Face! You rocked this quest."
+              : "Oop! Nice try - one more round and you'll level up."}
+          </p>
         )}
         {submissionError && (
           <p className="text-base font-bold text-accent mb-6">{submissionError}</p>

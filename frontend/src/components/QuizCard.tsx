@@ -60,8 +60,8 @@ export function QuizCard({ question, onAnswer }: QuizCardProps) {
           return (
             <motion.button
               key={idx}
-              whileHover={selectedIdx === null ? { scale: 1.02, y: -2 } : {}}
-              whileTap={selectedIdx === null ? { scale: 0.98 } : {}}
+              whileHover={selectedIdx === null ? { rotate: [0, -2, 2, 0], y: -2 } : {}}
+              whileTap={selectedIdx === null ? { scale: 0.9 } : {}}
               onClick={() => handleSelect(idx)}
               disabled={selectedIdx !== null}
               className={cn(
@@ -79,6 +79,11 @@ export function QuizCard({ question, onAnswer }: QuizCardProps) {
                 {String.fromCharCode(65 + idx)}
               </div>
               <span className="truncate">{option}</span>
+              {selectedIdx !== null && isSelected && (
+                <span className="ml-auto text-xl" aria-hidden>
+                  {isCorrect ? "😊" : "😮"}
+                </span>
+              )}
             </motion.button>
           );
         })}

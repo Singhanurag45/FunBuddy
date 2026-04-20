@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
+  Atom,
+  BookOpenText,
   BrainCircuit,
   ChartSpline,
+  Cuboid,
   Sparkles,
   Swords,
   Trophy,
@@ -35,7 +38,7 @@ const featureCards = [
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-background text-slate-800">
+    <div className="min-h-screen bg-background text-slate-800 bg-[radial-gradient(circle_at_20%_20%,rgba(17,138,178,0.12),transparent_40%),radial-gradient(circle_at_80%_0%,rgba(255,209,102,0.18),transparent_40%)]">
       <Navbar variant="landing" />
 
       <main>
@@ -60,6 +63,16 @@ export function LandingPage() {
               FunBuddy brings high-energy quizzes, AI coaching, and live progress insights together so students
               stay curious, confident, and consistent.
             </p>
+            <motion.div
+              whileHover={{ rotate: [0, -2, 2, 0] }}
+              transition={{ duration: 0.5 }}
+              className="mx-auto mt-6 max-w-2xl rounded-3xl border border-primary/20 bg-white/90 px-5 py-4 text-left shadow-sm"
+            >
+              <p className="text-sm font-black uppercase tracking-wider text-primary">Buddy Bot says</p>
+              <p className="mt-1 text-base font-semibold text-slate-700">
+                "Hi explorer! Pick a subject, complete your quest, and collect stars every day."
+              </p>
+            </motion.div>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
               <Link
                 to="/register"
@@ -108,6 +121,33 @@ export function LandingPage() {
                   </p>
                 </motion.article>
               ))}
+            </div>
+
+            <div className="mt-10 grid gap-4 sm:grid-cols-3">
+              <motion.div
+                whileHover={{ rotate: [0, -2, 2, 0] }}
+                className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm"
+              >
+                <Cuboid className="h-7 w-7 text-primary" />
+                <h3 className="mt-3 text-lg font-black text-slate-900">Math Missions</h3>
+                <p className="mt-1 text-sm font-semibold text-slate-600">Colorful blocks and counting games.</p>
+              </motion.div>
+              <motion.div
+                whileHover={{ rotate: [0, -2, 2, 0] }}
+                className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm"
+              >
+                <Atom className="h-7 w-7 text-success" />
+                <h3 className="mt-3 text-lg font-black text-slate-900">Science Sparks</h3>
+                <p className="mt-1 text-sm font-semibold text-slate-600">Planets, labs, and little experiments.</p>
+              </motion.div>
+              <motion.div
+                whileHover={{ rotate: [0, -2, 2, 0] }}
+                className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm"
+              >
+                <BookOpenText className="h-7 w-7 text-accent" />
+                <h3 className="mt-3 text-lg font-black text-slate-900">English Magic</h3>
+                <p className="mt-1 text-sm font-semibold text-slate-600">Stories, words, and reading fun.</p>
+              </motion.div>
             </div>
           </motion.div>
         </section>
