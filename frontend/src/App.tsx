@@ -1,6 +1,7 @@
 import { Suspense, lazy, type ReactElement } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { LandingPage } from "./pages/LandingPage";
 
 const Layout = lazy(() =>
   import("./pages/Layout").then((module) => ({ default: module.Layout })),
@@ -31,16 +32,24 @@ const RegisterPage = lazy(() =>
     default: module.RegisterPage,
   })),
 );
-const LandingPage = lazy(() =>
-  import("./pages/LandingPage").then((module) => ({
-    default: module.LandingPage,
-  })),
-);
 
-// Protected Route wrapper
+function RouteFallback() {
+  return (
+    <div className="min-h-screen bg-background text-slate-500">
+      <div className="mx-auto max-w-7xl px-4 py-10 font-bold sm:px-6 lg:px-8">
+        Loading...
+      </div>
+    </div>
+  );
+}
+
+function withSuspense(children: ReactElement) {
+  return <Suspense fallback={<RouteFallback />}>{children}</Suspense>;
+}
+
 function RequireAuth({ children }: { children: ReactElement }) {
   const { user, loading } = useAuth();
-  if (loading) return null;
+  if (loading) return <RouteFallback />;
   return user ? children : <Navigate to="/login" replace />;
 }
 
@@ -48,7 +57,14 @@ function RootEntry() {
   const { user, loading } = useAuth();
   const token = typeof window !== "undefined" ? localStorage.getItem("learnify_token") : null;
 
-  if (loading) return null;
+  if (!token) {
+    return <LandingPage />;
+  }
+
+  if (loading) {
+    return <LandingPage />;
+  }
+
   if (user || token) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -60,34 +76,26 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Suspense
-          fallback={
-            <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-500 font-bold">
-              Loading...
-            </div>
-          }
-        >
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/" element={<RootEntry />} />
+        <Routes>
+          <Route path="/login" element={withSuspense(<LoginPage />)} />
+          <Route path="/register" element={withSuspense(<RegisterPage />)} />
+          <Route path="/" element={<RootEntry />} />
 
-            <Route
-              path="/dashboard"
-              element={
-                <RequireAuth>
-                  <Layout />
-                </RequireAuth>
-              }
-            >
-              <Route index element={<DashboardPage />} />
-              <Route path="quiz" element={<QuizPage />} />
-              <Route path="leaderboard" element={<LeaderboardPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-            </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
+          <Route
+            path="/dashboard"
+            element={
+              <RequireAuth>
+                {withSuspense(<Layout />)}
+              </RequireAuth>
+            }
+          >
+            <Route index element={withSuspense(<DashboardPage />)} />
+            <Route path="quiz" element={withSuspense(<QuizPage />)} />
+            <Route path="leaderboard" element={withSuspense(<LeaderboardPage />)} />
+            <Route path="settings" element={withSuspense(<SettingsPage />)} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </BrowserRouter>
     </AuthProvider>
   );
