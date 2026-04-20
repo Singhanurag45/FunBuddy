@@ -1,0 +1,14 @@
+# robots.txt for FunBuddy frontend
+# Applies to all crawlers unless a specific user-agent block overrides it.
+User-agent: *
+Disallow: /api/
+Disallow: /private/
+Disallow: /login
+Disallow: /register
+Allow: /
+
+# Optional: block OpenAI crawler if you do not want content used for model training.
+User-agent: GPTBot
+Disallow: /
+
+Sitemap: https://fun-buddy-frontend.vercel.app/sitemap.xml
