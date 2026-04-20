@@ -5,7 +5,9 @@ import {
   BookOpenText,
   BrainCircuit,
   ChartSpline,
+  ChevronRight,
   Cuboid,
+  HeartHandshake,
   Sparkles,
   Swords,
   Trophy,
@@ -33,6 +35,30 @@ const featureCards = [
     title: "Leaderboards",
     description: "XP and level-based competition that motivates learners to climb ranks with every quiz.",
     icon: Trophy,
+  },
+];
+
+const testimonials = [
+  {
+    quote:
+      "My daughter now asks to do one more quiz before dinner. The missions and progress tracking make practice feel like a game.",
+    name: "Priya Sharma",
+    role: "Parent of Class 3 learner",
+    accent: "from-primary/18 to-success/18",
+  },
+  {
+    quote:
+      "FunBuddy gives me the kind of live insight dashboard I wish every classroom tool had. Students stay engaged and I can spot weak areas fast.",
+    name: "Rohan Mehta",
+    role: "Elementary teacher",
+    accent: "from-success/18 to-secondary/30",
+  },
+  {
+    quote:
+      "The AI hints feel friendly instead of robotic, and the quiz flow keeps the experience playful while still showing strong frontend polish.",
+    name: "Anika Verma",
+    role: "Recruiter reviewing portfolio projects",
+    accent: "from-accent/16 to-primary/16",
   },
 ];
 
@@ -152,6 +178,56 @@ export function LandingPage() {
           </motion.div>
         </section>
 
+        <section className="px-4 py-8 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.45 }}
+            className="mx-auto max-w-6xl"
+          >
+            <div className="mb-8 text-center">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/75 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-primary shadow-[0_20px_25px_-5px_rgb(0_0_0_/_0.05)]">
+                <HeartHandshake className="h-4 w-4" />
+                Testimonials
+              </div>
+              <h2 className="mt-5 text-3xl font-black text-slate-900 sm:text-4xl">
+                Families, teachers, and recruiters all get something real from it
+              </h2>
+              <p className="mx-auto mt-4 max-w-3xl text-base font-semibold text-slate-600">
+                Built to delight young learners while still showing thoughtful product design, system thinking, and polished execution.
+              </p>
+            </div>
+
+            <div className="bento-grid">
+              {testimonials.map((testimonial, index) => (
+                <motion.article
+                  key={testimonial.name}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.25 }}
+                  transition={{ duration: 0.4, delay: index * 0.08 }}
+                  className="glass-card relative overflow-hidden rounded-[2.5rem] p-6"
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${testimonial.accent}`} />
+                  <div className="relative">
+                    <div className="mb-6 inline-flex rounded-2xl bg-white/80 p-3 text-primary shadow-sm">
+                      <Sparkles className="h-5 w-5" />
+                    </div>
+                    <p className="text-base font-semibold leading-8 text-slate-700">
+                      "{testimonial.quote}"
+                    </p>
+                    <div className="mt-8 border-t border-white/70 pt-5">
+                      <p className="text-lg font-black text-slate-900">{testimonial.name}</p>
+                      <p className="mt-1 text-sm font-semibold text-slate-500">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+
         <section className="px-4 pb-20 pt-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -179,6 +255,40 @@ export function LandingPage() {
           </motion.div>
         </section>
       </main>
+
+      <footer className="px-4 pb-10 sm:px-6 lg:px-8">
+        <div className="glass-card mx-auto flex max-w-6xl flex-col gap-8 rounded-[2.75rem] px-6 py-8 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-xl">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-[1.2rem] bg-gradient-to-br from-primary to-[#4f8bff] shadow-lg shadow-primary/20">
+                <img src="/Logo.webp" alt="FunBuddy" className="h-6 w-6 object-contain" />
+              </div>
+              <div>
+                <p className="text-xl font-black tracking-tight text-slate-900">FunBuddy</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.22em] text-primary/70">
+                  Playful SaaS Learning
+                </p>
+              </div>
+            </div>
+            <p className="mt-4 text-sm font-semibold leading-7 text-slate-600">
+              Gamified quizzes, AI-guided hints, and premium analytics for students who learn best when curiosity stays in motion.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 text-sm font-semibold text-slate-600 md:items-end">
+            <Link to="/register" className="inline-flex items-center gap-2 font-black text-primary transition hover:translate-x-1">
+              Create your account
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+            <Link to="/login" className="transition hover:text-slate-900">
+              Sign in to continue your mission
+            </Link>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+              © 2026 FunBuddy. Built for joyful progress.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
