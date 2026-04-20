@@ -1,9 +1,9 @@
 import { memo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Home, Gamepad2, Trophy, Settings, LogOut } from "lucide-react";
-import { cn } from "../lib/utils";
+import { Gamepad2, Home, LogOut, Settings, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
+import { cn } from "../lib/utils";
 
 const navItems = [
   { path: "/dashboard", icon: Home, label: "Dashboard", theme: "primary" },
@@ -36,40 +36,35 @@ export function Sidebar() {
 
   const getThemeClasses = (theme: string, active: boolean) => {
     const base =
-      "relative flex items-center gap-4 px-4 py-3 rounded-2xl transition-all font-black tracking-tight overflow-hidden group";
+      "relative flex items-center gap-4 overflow-hidden rounded-[2rem] px-4 py-3 font-black tracking-tight transition-all group";
     const themes: Record<string, string> = {
       primary: active
         ? "bg-primary/10 text-primary"
-        : "text-slate-400 hover:text-primary hover:bg-primary/5",
+        : "text-slate-400 hover:bg-primary/5 hover:text-primary",
       success: active
-        ? "bg-success/10 text-success"
-        : "text-slate-400 hover:text-success hover:bg-success/5",
+        ? "bg-success/12 text-success-foreground"
+        : "text-slate-400 hover:bg-success/8 hover:text-success-foreground",
       secondary: active
-        ? "bg-secondary/20 text-yellow-700"
-        : "text-slate-400 hover:text-yellow-700 hover:bg-secondary/10",
+        ? "bg-secondary/22 text-primary"
+        : "text-slate-400 hover:bg-secondary/18 hover:text-primary",
       accent: active
-        ? "bg-accent/10 text-accent"
-        : "text-slate-400 hover:text-accent hover:bg-accent/5",
+        ? "bg-accent/10 text-accent-foreground"
+        : "text-slate-400 hover:bg-accent/8 hover:text-accent-foreground",
     };
     return cn(base, themes[theme]);
   };
 
   return (
-    <aside className="hidden lg:flex w-72 h-screen sticky top-0 bg-white border-r border-slate-100 flex-col p-8 z-20 shrink-0">
-      {/* PERFECT LOGO SECTION */}
-      <div className="flex items-center gap-4 mb-14 group cursor-pointer">
+    <aside className="sticky top-0 z-20 hidden h-screen w-72 shrink-0 flex-col border-r border-white/60 bg-white/68 p-8 backdrop-blur-xl lg:flex">
+      <div className="mb-14 flex cursor-pointer items-center gap-4 group">
         <div className="relative">
-          {/* Outer Glow/Shadow */}
-          <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full scale-125 group-hover:scale-150 transition-transform duration-500" />
-
-          {/* Logo Container */}
-          <div className="relative w-12 h-12 bg-gradient-to-br from-primary to-indigo-600 rounded-[1.25rem] flex items-center justify-center shadow-lg shadow-primary/30 transform group-hover:rotate-6 transition-transform duration-300">
+          <div className="absolute inset-0 scale-125 rounded-full bg-primary/20 blur-xl transition-transform duration-500 group-hover:scale-150" />
+          <div className="relative flex h-12 w-12 items-center justify-center rounded-[1.25rem] bg-gradient-to-br from-primary to-[#4f8bff] shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:rotate-6">
             <img
               src="/Logo.webp"
               alt="FunBuddy Logo"
-              className="w-7 h-7 object-contain drop-shadow-md"
+              className="h-7 w-7 object-contain drop-shadow-md"
               onError={(e) => {
-                // Fallback icon if image fails to load
                 e.currentTarget.style.display = "none";
               }}
             />
@@ -77,7 +72,7 @@ export function Sidebar() {
         </div>
 
         <div>
-          <h1 className="text-2xl font-black tracking-tighter text-slate-900 leading-none">
+          <h1 className="text-2xl font-black leading-none tracking-tighter text-slate-900">
             FunBuddy
           </h1>
           <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">
@@ -86,7 +81,6 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* NAVIGATION */}
       <nav className="flex-1 space-y-2">
         {navItems.map((item) => {
           const isActive = isNavItemActive(location.pathname, item.path);
@@ -97,15 +91,14 @@ export function Sidebar() {
                 whileTap={{ scale: 0.98 }}
                 className={getThemeClasses(item.theme, isActive)}
               >
-                {/* Active Indicator Pill */}
                 {isActive && (
                   <motion.div
                     layoutId="activePill"
                     className={cn(
-                      "absolute left-0 w-1.5 h-6 rounded-r-full",
+                      "absolute left-0 h-6 w-1.5 rounded-r-full",
                       item.theme === "primary" && "bg-primary",
                       item.theme === "success" && "bg-success",
-                      item.theme === "secondary" && "bg-yellow-500",
+                      item.theme === "secondary" && "bg-primary/70",
                       item.theme === "accent" && "bg-accent",
                     )}
                   />
@@ -113,7 +106,7 @@ export function Sidebar() {
 
                 <item.icon
                   className={cn(
-                    "w-6 h-6 transition-transform duration-300",
+                    "h-6 w-6 transition-transform duration-300",
                     isActive
                       ? "scale-110"
                       : "group-hover:scale-110 group-hover:rotate-3",
@@ -126,40 +119,39 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* USER FOOTER */}
-      <div className="mt-auto space-y-4">
-        <motion.button
-          whileHover={{ x: 4 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={handleLogout}
-          className="relative w-full flex items-center gap-4 px-4 py-3 rounded-2xl transition-all font-black tracking-tight overflow-hidden group text-slate-400 hover:text-rose-500 hover:bg-rose-50"
-        >
-          <LogOut className="w-6 h-6 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" />
-          <span className="text-sm">Logout</span>
-        </motion.button>
-
-        <div className="bg-slate-900 flex items-center gap-3 p-4 rounded-[2rem] shadow-xl shadow-slate-200">
+      <div className="mt-6 rounded-[2rem] bg-slate-900 p-4 shadow-xl shadow-slate-200">
+        <div className="flex items-center gap-3">
           <div className="relative">
             <img
               src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || "Alex"}`}
               alt="Avatar"
-              className="w-11 h-11 rounded-2xl bg-slate-800 border-2 border-slate-700 shadow-sm"
+              className="h-11 w-11 rounded-2xl border-2 border-slate-700 bg-slate-800 shadow-sm"
             />
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-success border-4 border-slate-900 rounded-full" />
+            <div className="absolute -right-1 -top-1 h-4 w-4 rounded-full border-4 border-slate-900 bg-success" />
           </div>
           <div className="overflow-hidden">
-            <p className="text-sm font-black text-white truncate">
+            <p className="truncate text-sm font-black text-white">
               {user?.name || "Guest User"}
             </p>
             <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-              <p className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-primary" />
+              <p className="text-[10px] font-black uppercase tracking-tighter text-slate-400">
                 Lvl {user?.level || 1} Scholar
               </p>
             </div>
           </div>
         </div>
       </div>
+
+      <motion.button
+        whileHover={{ x: 4 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={handleLogout}
+        className="mt-auto flex w-full items-center gap-4 overflow-hidden rounded-[2rem] px-4 py-3 font-black tracking-tight text-slate-400 transition-all hover:bg-rose-50 hover:text-rose-500"
+      >
+        <LogOut className="h-6 w-6 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" />
+        <span className="text-sm">Logout</span>
+      </motion.button>
     </aside>
   );
 }
@@ -168,24 +160,34 @@ export function MobileBottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200 pb-[env(safe-area-inset-bottom)]">
-      <div className="grid grid-cols-4">
-        {navItems.map((item) => {
-          const isActive = isNavItemActive(location.pathname, item.path);
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={cn(
-                "flex flex-col items-center justify-center gap-1 py-3 text-xs font-black transition-colors",
-                isActive ? "text-primary" : "text-slate-500",
-              )}
-            >
-              <item.icon className={cn("w-5 h-5", isActive && "scale-105")} />
-              <span className="leading-none">{item.label}</span>
-            </Link>
-          );
-        })}
+    <nav className="fixed inset-x-0 bottom-4 z-[90] px-4 lg:hidden">
+      <div className="mx-auto max-w-md rounded-[2rem] border border-white/70 bg-white/70 p-2 shadow-[0_20px_25px_-5px_rgb(0_0_0_/_0.05)] backdrop-blur-2xl">
+        <div className="grid grid-cols-4 gap-1">
+          {navItems.map((item) => {
+            const isActive = isNavItemActive(location.pathname, item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  "relative flex flex-col items-center justify-center gap-1 rounded-[1.4rem] py-3 text-[11px] font-black transition-all",
+                  isActive ? "text-primary" : "text-slate-500",
+                )}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="mobileActiveBubble"
+                    className="absolute inset-0 rounded-[1.4rem] bg-[linear-gradient(135deg,rgba(37,99,255,0.16),rgba(102,217,184,0.18))]"
+                  />
+                )}
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/80 shadow-sm">
+                  <item.icon className={cn("h-5 w-5 transition-transform", isActive && "scale-110")} />
+                </div>
+                <span className="relative leading-none">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );

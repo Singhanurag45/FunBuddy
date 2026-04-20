@@ -1,15 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 @theme {
-  --color-primary: #118AB2;     /* Blue */
-  --color-secondary: #FFD166;   /* Yellow */
-  --color-success: #06D6A0;     /* Green */
-  --color-accent: #EF476F;      /* Pink */
-  --color-background: #F8F9FA;  /* Light SaaS background */
-  
-  /* Kid-friendly sans-serif font stack */
-  --font-sans: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
-  
+  --color-primary: #2563ff;
+  --color-primary-foreground: #f8fbff;
+  --color-success: #66d9b8;
+  --color-success-foreground: #0f3c31;
+  --color-accent: #ff7a6b;
+  --color-accent-foreground: #5e1d18;
+  --color-secondary: #b9ccff;
+  --color-background: #f3f8ff;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f9fbff;
+  --color-ink: #17324d;
+  --color-muted: #6d8198;
+  --color-border-soft: rgba(255, 255, 255, 0.75);
+
+  --font-sans: 'Plus Jakarta Sans', Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+
+  --radius-2xl: 2.5rem;
+  --radius-3xl: 3rem;
+  --spacing-card: 1.5rem;
+
+  --shadow-glass: 0 24px 80px rgba(37, 99, 255, 0.14);
+  --shadow-soft: 0 18px 48px rgba(23, 50, 77, 0.08);
+
   --animate-wiggle: wiggle 1s ease-in-out infinite;
 
   @keyframes wiggle {
@@ -19,7 +35,55 @@
 }
 
 @layer base {
-  body {
-    @apply m-0 min-h-dvh antialiased bg-background text-slate-800 font-sans;
+  * {
+    @apply border-transparent;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply m-0 min-h-dvh font-sans antialiased text-[color:var(--color-ink)];
+    background:
+      radial-gradient(circle at top left, rgba(102, 217, 184, 0.22), transparent 32%),
+      radial-gradient(circle at top right, rgba(37, 99, 255, 0.2), transparent 38%),
+      linear-gradient(180deg, #f8fbff 0%, var(--color-background) 52%, #eef5ff 100%);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+  }
+
+  ::selection {
+    background: rgba(37, 99, 255, 0.18);
+    color: var(--color-ink);
+  }
+}
+
+@utility glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-glass);
+}
+
+@utility bento-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+@utility surface-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78));
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-soft);
 }
