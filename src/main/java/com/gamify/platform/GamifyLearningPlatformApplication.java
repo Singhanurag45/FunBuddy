@@ -10,3 +10,5 @@ public class GamifyLearningPlatformApplication {
         SpringApplication.run(GamifyLearningPlatformApplication.class, args);
     }
 }
+
+//package com.gamify   

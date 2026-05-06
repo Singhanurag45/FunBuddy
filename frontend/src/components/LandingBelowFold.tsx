@@ -4,7 +4,6 @@ import Atom from "lucide-react/dist/esm/icons/atom.js";
 import BookOpenText from "lucide-react/dist/esm/icons/book-open-text.js";
 import BrainCircuit from "lucide-react/dist/esm/icons/brain-circuit.js";
 import ChartSpline from "lucide-react/dist/esm/icons/chart-spline.js";
-import ChevronRight from "lucide-react/dist/esm/icons/chevron-right.js";
 import Cuboid from "lucide-react/dist/esm/icons/cuboid.js";
 import HeartHandshake from "lucide-react/dist/esm/icons/heart-handshake.js";
 import Sparkles from "lucide-react/dist/esm/icons/sparkles.js";
@@ -14,22 +13,26 @@ import Trophy from "lucide-react/dist/esm/icons/trophy.js";
 const featureCards = [
   {
     title: "Interactive Quizzes",
-    description: "Engaging questions across subjects that keep every round fast, focused, and fun.",
+    description:
+      "Engaging questions across subjects that keep every round fast, focused, and fun.",
     icon: Sparkles,
   },
   {
     title: "AI-Powered Insights",
-    description: "Gemini API integration delivers smart hints and post-quiz analysis to accelerate learning.",
+    description:
+      "Gemini API integration delivers smart hints and post-quiz analysis to accelerate learning.",
     icon: BrainCircuit,
   },
   {
     title: "Real-time Analytics",
-    description: "Track wins, weak spots, and growth trends with live progress visualized through Recharts.",
+    description:
+      "Track wins, weak spots, and growth trends with live progress visualized through Recharts.",
     icon: ChartSpline,
   },
   {
     title: "Leaderboards",
-    description: "XP and level-based competition that motivates learners to climb ranks with every quiz.",
+    description:
+      "XP and level-based competition that motivates learners to climb ranks with every quiz.",
     icon: Trophy,
   },
 ];
@@ -69,7 +72,9 @@ export function LandingBelowFold() {
           transition={{ duration: 0.45 }}
           className="mx-auto max-w-6xl"
         >
-          <h2 className="text-center text-3xl font-black text-slate-900 sm:text-4xl">Platform Features</h2>
+          <h2 className="text-center text-3xl font-black text-slate-900 sm:text-4xl">
+            Platform Features
+          </h2>
           <p className="mx-auto mt-4 max-w-3xl text-center text-base font-semibold text-slate-600">
             Built for momentum, designed for mastery.
           </p>
@@ -86,7 +91,9 @@ export function LandingBelowFold() {
                 <div className="mb-4 inline-flex rounded-2xl bg-primary/10 p-3 text-primary">
                   <feature.icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-xl font-black text-slate-900">{feature.title}</h3>
+                <h3 className="text-xl font-black text-slate-900">
+                  {feature.title}
+                </h3>
                 <p className="mt-2 text-sm font-semibold leading-relaxed text-slate-600">
                   {feature.description}
                 </p>
@@ -100,24 +107,36 @@ export function LandingBelowFold() {
               className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm"
             >
               <Cuboid className="h-7 w-7 text-primary" />
-              <h3 className="mt-3 text-lg font-black text-slate-900">Math Missions</h3>
-              <p className="mt-1 text-sm font-semibold text-slate-600">Colorful blocks and counting games.</p>
+              <h3 className="mt-3 text-lg font-black text-slate-900">
+                Math Missions
+              </h3>
+              <p className="mt-1 text-sm font-semibold text-slate-600">
+                Colorful blocks and counting games.
+              </p>
             </motion.div>
             <motion.div
               whileHover={{ rotate: [0, -2, 2, 0] }}
               className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm"
             >
               <Atom className="h-7 w-7 text-success" />
-              <h3 className="mt-3 text-lg font-black text-slate-900">Science Sparks</h3>
-              <p className="mt-1 text-sm font-semibold text-slate-600">Planets, labs, and little experiments.</p>
+              <h3 className="mt-3 text-lg font-black text-slate-900">
+                Science Sparks
+              </h3>
+              <p className="mt-1 text-sm font-semibold text-slate-600">
+                Planets, labs, and little experiments.
+              </p>
             </motion.div>
             <motion.div
               whileHover={{ rotate: [0, -2, 2, 0] }}
               className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm"
             >
               <BookOpenText className="h-7 w-7 text-accent" />
-              <h3 className="mt-3 text-lg font-black text-slate-900">English Magic</h3>
-              <p className="mt-1 text-sm font-semibold text-slate-600">Stories, words, and reading fun.</p>
+              <h3 className="mt-3 text-lg font-black text-slate-900">
+                English Magic
+              </h3>
+              <p className="mt-1 text-sm font-semibold text-slate-600">
+                Stories, words, and reading fun.
+              </p>
             </motion.div>
           </div>
         </motion.div>
@@ -140,7 +159,8 @@ export function LandingBelowFold() {
               Families, teachers, and recruiters all get something real from it
             </h2>
             <p className="mx-auto mt-4 max-w-3xl text-base font-semibold text-slate-600">
-              Built to delight young learners while still showing thoughtful product design, system thinking, and polished execution.
+              Built to delight young learners while still showing thoughtful
+              product design, system thinking, and polished execution.
             </p>
           </div>
 
@@ -154,7 +174,9 @@ export function LandingBelowFold() {
                 transition={{ duration: 0.4, delay: index * 0.08 }}
                 className="glass-card relative overflow-hidden rounded-[2.5rem] p-6"
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${testimonial.accent}`} />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${testimonial.accent}`}
+                />
                 <div className="relative">
                   <div className="mb-6 inline-flex rounded-2xl bg-white/80 p-3 text-primary shadow-sm">
                     <Sparkles className="h-5 w-5" />
@@ -163,8 +185,12 @@ export function LandingBelowFold() {
                     "{testimonial.quote}"
                   </p>
                   <div className="mt-8 border-t border-white/70 pt-5">
-                    <p className="text-lg font-black text-slate-900">{testimonial.name}</p>
-                    <p className="mt-1 text-sm font-semibold text-slate-500">{testimonial.role}</p>
+                    <p className="text-lg font-black text-slate-900">
+                      {testimonial.name}
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-slate-500">
+                      {testimonial.role}
+                    </p>
                   </div>
                 </div>
               </motion.article>
@@ -188,8 +214,9 @@ export function LandingBelowFold() {
             Where Play Meets Education For Stronger Retention
           </h2>
           <p className="max-w-3xl text-base font-semibold text-blue-50 sm:text-lg">
-            FunBuddy blends the excitement of play with educational depth, helping learners remember concepts
-            longer through active challenge, feedback, and repetition.
+            FunBuddy blends the excitement of play with educational depth,
+            helping learners remember concepts longer through active challenge,
+            feedback, and repetition.
           </p>
           <Link
             to="/register"
@@ -199,40 +226,6 @@ export function LandingBelowFold() {
           </Link>
         </motion.div>
       </section>
-
-      <footer className="px-4 pb-10 sm:px-6 lg:px-8">
-        <div className="glass-card mx-auto flex max-w-6xl flex-col gap-8 rounded-[2.75rem] px-6 py-8 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-[1.2rem] bg-gradient-to-br from-primary to-[#4f8bff] shadow-lg shadow-primary/20">
-                <img src="/Logo.webp" alt="FunBuddy" className="h-6 w-6 object-contain" />
-              </div>
-              <div>
-                <p className="text-xl font-black tracking-tight text-slate-900">FunBuddy</p>
-                <p className="text-[11px] font-black uppercase tracking-[0.22em] text-primary/70">
-                  Playful SaaS Learning
-                </p>
-              </div>
-            </div>
-            <p className="mt-4 text-sm font-semibold leading-7 text-slate-600">
-              Gamified quizzes, AI-guided hints, and premium analytics for students who learn best when curiosity stays in motion.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3 text-sm font-semibold text-slate-600 md:items-end">
-            <Link to="/register" className="inline-flex items-center gap-2 font-black text-primary transition hover:translate-x-1">
-              Create your account
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-            <Link to="/login" className="transition hover:text-slate-900">
-              Sign in to continue your mission
-            </Link>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
-              © 2026 FunBuddy. Built for joyful progress.
-            </p>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Zap from "lucide-react/dist/esm/icons/zap.js";
 import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 
 const LandingBelowFold = lazy(() =>
   import("../components/LandingBelowFold").then((module) => ({
@@ -34,17 +35,21 @@ export function LandingPage() {
               Gamified Learning That Turns Every Lesson Into A Winning Mission
             </h1>
             <p className="mx-auto mt-6 max-w-3xl text-lg font-semibold text-slate-600 sm:text-xl">
-              FunBuddy brings high-energy quizzes, AI coaching, and live progress insights together so students
-              stay curious, confident, and consistent.
+              FunBuddy brings high-energy quizzes, AI coaching, and live
+              progress insights together so students stay curious, confident,
+              and consistent.
             </p>
             <motion.div
               whileHover={{ rotate: [0, -2, 2, 0] }}
               transition={{ duration: 0.5 }}
               className="mx-auto mt-6 max-w-2xl rounded-3xl border border-primary/20 bg-white/90 px-5 py-4 text-left shadow-sm"
             >
-              <p className="text-sm font-black uppercase tracking-wider text-primary">Buddy Bot says</p>
+              <p className="text-sm font-black uppercase tracking-wider text-primary">
+                Buddy Bot says
+              </p>
               <p className="mt-1 text-base font-semibold text-slate-700">
-                "Hi explorer! Pick a subject, complete your quest, and collect stars every day."
+                "Hi explorer! Pick a subject, complete your quest, and collect
+                stars every day."
               </p>
             </motion.div>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
@@ -67,6 +72,8 @@ export function LandingPage() {
         <Suspense fallback={<div className="h-24" />}>
           <LandingBelowFold />
         </Suspense>
+
+        <Footer />
       </main>
     </div>
   );
