@@ -1,10 +1,13 @@
 # FunBuddy
 
-FunBuddy is a full-stack gamified learning platform with:
+FunBuddy is a full-stack gamified learning platform where students take quizzes, earn points, level up, and track progress through analytics and leaderboards.
 
-- A Spring Boot backend (JWT auth, MongoDB, quiz + analytics APIs)
-- A React + TypeScript frontend (Vite)
-- A points/level-based learning experience with leaderboard and dashboard analytics
+## What This Project Includes
+
+- Spring Boot backend with JWT-based authentication
+- MongoDB data storage for users, questions, submissions, and analytics
+- React and TypeScript frontend built with Vite
+- Dashboard experience with quiz flow, metrics, and leaderboard
 
 ## Tech Stack
 
@@ -12,14 +15,17 @@ FunBuddy is a full-stack gamified learning platform with:
 
 - Java 17
 - Spring Boot 3
-- Spring Security + JWT
+- Spring Security
+- JWT (jjwt)
 - Spring Data MongoDB
 - Maven
 
 ### Frontend
 
-- React 19 + TypeScript
+- React 19
+- TypeScript
 - Vite
+- React Router
 - Axios
 - Recharts
 - Framer Motion
@@ -40,131 +46,126 @@ FunBuddy/
   src/main/resources/
     application.properties
     application-dev.properties
+  src/test/java/com/gamify/platform/
   frontend/
     src/
       components/
       context/
       pages/
       services/
+  postman/
+    Gamify Backend APIs.postman_collection.json
 ```
 
 ## Prerequisites
 
 - Java 17+
 - Maven 3.9+
-- Node.js 20+ (or 18+ with modern npm)
-- MongoDB Atlas (or a MongoDB URI)
+- Node.js 20+ (18+ also works with modern npm)
+- A MongoDB connection URI
 
 ## Environment Variables
 
-The backend reads environment variables from your shell and can also load a local `.env` file.
+The backend loads values from your shell environment and also supports a local .env file via Spring config import.
 
-### Backend required
+### Backend
 
-- `DATABASE_URL` - MongoDB connection string
-
-### Backend optional
-
-- `JWT_SECRET` - JWT signing secret
-- `JWT_EXPIRATION_MS` - token validity in ms (default: `86400000`)
-- `CORS_ALLOWED_ORIGIN_PATTERNS` - comma-separated allowed origins/patterns
+- DATABASE_URL (required): MongoDB connection string
+- JWT_SECRET (optional): JWT signing secret
+- JWT_EXPIRATION_MS (optional): token validity in milliseconds, default is 86400000
+- CORS_ALLOWED_ORIGIN_PATTERNS (optional): comma-separated allowed origins or patterns
 
 ### Frontend
 
-- `VITE_API_URL` - backend base URL (without `/api` is also fine)
+- VITE_API_URL
 
 Notes:
 
-- In local frontend development, if `VITE_API_URL` is missing, it falls back to `http://localhost:8080/api`.
-- In production frontend builds, `VITE_API_URL` must be set.
+- In local development, if VITE_API_URL is missing, the frontend falls back to http://localhost:8080/api.
+- In production builds, VITE_API_URL is required.
+- VITE_API_URL can be set with or without /api. The frontend app normalizes it.
 
-## Running Locally
+## Run Locally
 
-## 1) Start backend
+### 1) Start backend
 
-From the repository root:
+From repository root:
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-On Windows PowerShell/CMD:
+Windows PowerShell:
 
 ```bash
-mvnw.cmd spring-boot:run
+.\mvnw.cmd spring-boot:run
 ```
 
-Backend default URL: `http://localhost:8080`
+Backend URL: http://localhost:8080
 
-To enable dev error detail profile:
+Run backend with dev profile:
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+.\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
-## 2) Start frontend
+### 2) Start frontend
 
-From `frontend/`:
+From frontend directory:
 
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
 
-Frontend dev URL (default): `http://localhost:5173`
+Frontend URL: http://localhost:5173
 
-## Build Commands
+## Build
 
-### Backend
+### Backend build
 
 ```bash
-./mvnw clean package
+./mvnw clean install
 ```
 
-### Frontend
+Windows PowerShell:
+
+```bash
+.\mvnw.cmd clean install
+```
+
+### Frontend build
 
 ```bash
 cd frontend
 npm run build
 ```
 
-## Docker (Backend)
+## API Summary
 
-Build image:
+Base path: /api
 
-```bash
-docker build -t funbuddy-backend .
-```
+### User and Auth
 
-Run container:
-
-```bash
-docker run --rm -p 8080:8080 -e DATABASE_URL="<your_mongodb_uri>" -e JWT_SECRET="<your_secret>" funbuddy-backend
-```
-
-## API Overview
-
-Base path: `/api`
-
-### Auth and Users
-
-- `POST /api/users/register`
-- `POST /api/users/login`
-- `GET /api/users`
-- `GET /api/users/leaderboard`
+- POST /api/users/register
+- POST /api/users/login
+- GET /api/users
+- GET /api/users/leaderboard
 
 ### Questions and Quiz
 
-- `POST /api/questions`
-- `POST /api/questions/bulk`
-- `GET /api/questions?subject=<subject>&classLevel=<classLevel>`
-- `POST /api/questions/submit`
-- `GET /api/questions/analytics?userId=<userId>`
+- POST /api/questions
+- POST /api/questions/bulk
+- GET /api/questions?subject={subject}&classLevel={classLevel}
+- POST /api/questions/submit
+- GET /api/questions/analytics?userId={userId}
 
-## Default Auth Behavior
+## Security
 
-- Public endpoints: login, register, error
-- All other `/api/**` endpoints require Bearer JWT token
+- Public endpoints: /api/users/register, /api/users/login, /error
+- All other endpoints require Bearer token authentication
+- CORS is configured through CORS_ALLOWED_ORIGIN_PATTERNS
 
 ## Testing
 
@@ -174,14 +175,35 @@ Run backend tests:
 ./mvnw test
 ```
 
+Windows PowerShell:
+
+```bash
+.\mvnw.cmd test
+```
+
+## Docker (Backend)
+
+Build backend image:
+
+```bash
+docker build -t funbuddy-backend .
+```
+
+Run backend container:
+
+```bash
+docker run --rm -p 8080:8080 -e DATABASE_URL="<your_mongodb_uri>" -e JWT_SECRET="<your_secret>" funbuddy-backend
+```
+
 ## Postman
 
-A ready collection is available at:
+Use this collection for quick API testing:
 
-- `postman/Gamify Backend APIs.postman_collection.json`
+- postman/Gamify Backend APIs.postman_collection.json
 
-## Deployment Notes
+## Deployment Checklist
 
-- Backend can run on platforms that provide `PORT` (Dockerfile supports this pattern).
-- Frontend should set `VITE_API_URL` in deployment environment variables.
-- Ensure backend CORS allowed origins include your deployed frontend URL.
+- Set DATABASE_URL and JWT_SECRET in backend environment
+- Set VITE_API_URL in frontend environment
+- Add deployed frontend URL to CORS_ALLOWED_ORIGIN_PATTERNS
+- Ensure backend is reachable from frontend origin
